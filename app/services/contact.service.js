@@ -5,7 +5,7 @@ class ContactService{
         this.Contact = client.db().collection("contacts");
     }
 
-    extractConactData(payload){
+    extractContactData(payload){
         const contact = {
             name: payload.name,
             email: payload.email,
@@ -21,7 +21,7 @@ class ContactService{
 
 
     async create(payload){
-        const contact =  this.extractConactData(payload);
+        const contact =  this.extractContactData(payload);
         const result = await this.Contact.findOneAndUpdate(
             contact,
             {   $set :{favorite:contact.favorite === true}},
@@ -56,10 +56,10 @@ class ContactService{
         const update = this.extractContactData(payload);
         const result = await this.Contact.findOneAndUpdate(
             filter,
-            {   $set:update},
-            {   returnDocument: 'after'}
+            {   $set: update },
+            {   returnDocument: "after"}
         );
-        return result.value;
+        return result;
     }
 
     
@@ -70,8 +70,7 @@ class ContactService{
         return result;
     }
 
-    
-    async findFavorite(userId) {
+    async findFavorite() {
         return await this.find({
             favorite: true
         });

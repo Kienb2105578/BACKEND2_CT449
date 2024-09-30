@@ -11,8 +11,8 @@ exports.create = async (req, res, next) => {
     
     try {
         const contactService = new ContactService(MongoDB.client);
-        const contact = await contactService.create({ ...req.body, userId: req.user._id });
-        return res.json({ data: { contact } });
+        const document = await contactService.create(req.body);
+        return res.send(document);
     }
     catch(error) {
         return next(new ApiError(500, 'An error occured while creating the contact'));
@@ -46,7 +46,7 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
     try {
         const contactService = new ContactService(MongoDB.client);
-        const contact = await contactService.findById(req.params.id);
+        const document = await contactService.findById(req.params.id);
         if(!document) {
             return next(new ApiError(404, 'Contact not found'));
         }
@@ -85,7 +85,7 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
     try {
         const contactService = new ContactService(MongoDB.client);
-        const deletedContact = await contactService.delete(req.params.id);
+        const document = await contactService.delete(req.params.id);
         if(!document) {
             return next(new ApiError(404, 'Contact not found'));
         }
@@ -117,7 +117,7 @@ exports.deleteAll = async (req, res, next) => {
 };
 
 // find all favorite contacts of a user
-exports.findAllFavorite = async (req, res, next) => {
+exports.findAllFavorite = async (_req, res, next) => {
     try {
         const contactService = new ContactService(MongoDB.client);
         const documents = await contactService.findFavorite();
